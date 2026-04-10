@@ -1,0 +1,50 @@
+import BigNumber from 'bignumber.js'
+import type { LevelData, BodyData, TalentData } from './types'
+
+export type { LevelData, BodyData, TalentData } from './types'
+
+const level: Record<string, LevelData> = {
+  _0: { id: '_0', name: '练体', max: new BigNumber(10).pow(3), life: new BigNumber(500), top: false, getNext: () => level._1 },
+  _1: { id: '_1', name: '练气', max: new BigNumber(10).pow(4), life: new BigNumber(1000), top: false, getNext: () => level._2 },
+  _2: { id: '_2', name: '筑基', max: new BigNumber(10).pow(6), life: new BigNumber(1000), top: false, getNext: () => level._3 },
+  _3: { id: '_3', name: '开光', max: new BigNumber(10).pow(8), life: new BigNumber(1000), top: false, getNext: () => level._4 },
+  _4: { id: '_4', name: '结丹', max: new BigNumber(10).pow(10), life: new BigNumber(1500), top: false, getNext: () => level._5 },
+  _5: { id: '_5', name: '元婴', max: new BigNumber(10).pow(12), life: new BigNumber(1500), top: false, getNext: () => level._6 },
+  _6: { id: '_6', name: '分神', max: new BigNumber(10).pow(15), life: new BigNumber(2000), top: false, getNext: () => level._7 },
+  _7: { id: '_7', name: '化神', max: new BigNumber(10).pow(18), life: new BigNumber(2000), top: false, getNext: () => level._8 },
+  _8: { id: '_8', name: '大乘', max: new BigNumber(10).pow(21), life: new BigNumber(3000), top: false, getNext: () => level._9 },
+  _9: { id: '_9', name: '渡劫', max: new BigNumber(10).pow(24), life: new BigNumber(5000), top: true, getNext: () => null },
+}
+
+const body: Record<string, BodyData> = {
+  _0: { id: '_0', name: '凡胎肉躯', num: new BigNumber(1), need: new BigNumber(10), top: false, getNext: () => body._1 },
+  _1: { id: '_1', name: '强身健体', num: new BigNumber(5), need: new BigNumber(400), top: false, getNext: () => body._2 },
+  _2: { id: '_2', name: '钢筋铁骨', num: new BigNumber(10), need: new BigNumber(2000), top: false, getNext: () => body._3 },
+  _3: { id: '_3', name: '龙气战体', num: new BigNumber(50), need: new BigNumber(10).pow(4), top: false, getNext: () => body._4 },
+  _4: { id: '_4', name: '黄金血脉', num: new BigNumber(200), need: new BigNumber(10).pow(4).times(8), top: false, getNext: () => body._5 },
+  _5: { id: '_5', name: '金刚不坏', num: new BigNumber(1000), need: new BigNumber(10).pow(6), top: false, getNext: () => body._6 },
+  _6: { id: '_6', name: '传说圣躯', num: new BigNumber(10).pow(4), need: new BigNumber(10).pow(7), top: false, getNext: () => body._7 },
+  _7: { id: '_7', name: '圆满道体', num: new BigNumber(10).pow(5), need: new BigNumber(10).pow(8), top: false, getNext: () => body._8 },
+  _8: { id: '_8', name: '不灭法身', num: new BigNumber(10).pow(7), need: new BigNumber(10).pow(10), top: false, getNext: () => body._9 },
+  _9: { id: '_9', name: '超凡入圣', num: new BigNumber(10).pow(9), need: new BigNumber(10).pow(13), top: false, getNext: () => body._10 },
+  _10: { id: '_10', name: '圣体转世', num: new BigNumber(10).pow(11), need: new BigNumber(10).pow(16), top: true, getNext: () => null },
+  // 隐藏/特殊等级（正常游戏无法到达 body._10.top=true）
+  _11: { id: '_11', name: '永世圣体', num: new BigNumber(10).pow(14), need: new BigNumber(10).pow(18), top: false, getNext: () => body._12 },
+  _12: { id: '_12', name: '圣体超神', num: new BigNumber(10).pow(16), need: new BigNumber(10).pow(19), top: false, getNext: () => body._13 },
+  _13: { id: '_13', name: '神体在世', num: new BigNumber(10).pow(17), need: new BigNumber(10).pow(20), top: true, getNext: () => null },
+}
+
+const talent: Record<string, TalentData> = {
+  _0: { id: '_0', name: '杂属废灵根', need: new BigNumber(200), num: new BigNumber(0), top: false, getNext: () => talent._1 },
+  _1: { id: '_1', name: '五属混灵根', need: new BigNumber(800), num: new BigNumber(1), top: false, getNext: () => talent._2 },
+  _2: { id: '_2', name: '四属弱灵根', need: new BigNumber(3000), num: new BigNumber(2), top: false, getNext: () => talent._3 },
+  _3: { id: '_3', name: '三重灵根', need: new BigNumber(10).pow(4).times(5), num: new BigNumber(4), top: false, getNext: () => talent._4 },
+  _4: { id: '_4', name: '双灵根', need: new BigNumber(10).pow(5).times(2), num: new BigNumber(6), top: false, getNext: () => talent._5 },
+  _5: { id: '_5', name: '单灵根', need: new BigNumber(10).pow(7), num: new BigNumber(8), top: false, getNext: () => talent._6 },
+  _6: { id: '_6', name: '地灵根', need: new BigNumber(10).pow(9), num: new BigNumber(11), top: false, getNext: () => talent._7 },
+  _7: { id: '_7', name: '天灵根', need: new BigNumber(10).pow(12), num: new BigNumber(15), top: false, getNext: () => talent._8 },
+  _8: { id: '_8', name: '圣灵根', need: new BigNumber(10).pow(15), num: new BigNumber(18), top: false, getNext: () => talent._9 },
+  _9: { id: '_9', name: '无垠根', need: new BigNumber(10).pow(19), num: new BigNumber(23), top: true, getNext: () => null },
+}
+
+export { level, body, talent }

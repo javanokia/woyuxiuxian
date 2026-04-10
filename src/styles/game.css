@@ -1,0 +1,82 @@
+/* === 游戏主布局 === */
+.game-bg {
+  background: #333333;
+}
+
+.game-center {
+  background: #efefef;
+}
+
+.table-row {
+  background: #888888;
+}
+
+.game-table {
+  width: 95%;
+  margin: auto;
+  background: #ffffff;
+}
+
+/* === 表头/分区行 === */
+.tr-header {
+  color: #e6ffff;
+  font-size: 120%;
+  font-weight: bold;
+  background: #000066;
+}
+
+.tr-group {
+  background: #e6e6ff;
+}
+
+.tr-body {
+  background: #e6e6ff;
+}
+
+.tr-talent {
+  background: #e6ffd6;
+}
+
+.tr-skill {
+  background: #ffffd6;
+}
+
+.tr-item {
+  background: #f2d6ff;
+}
+
+/* === 修炼面板 === */
+.announcement {
+  text-align: left;
+  margin: 5px;
+}
+
+.announce-label {
+  color: #FF0000;
+  font-weight: bold;
+}
+
+.btn-cultivate {
+  width: 60%;
+  font-size: 200%;
+}
+
+/* === 存档面板 === */
+.log-area {
+  background: #ffffff;
+  height: 300px;
+  overflow: scroll;
+}
+
+.save-input {
+  width: 70%;
+}
+
+/* === 通用 === */
+.text-muted {
+  color: gray;
+}
+
+marquee {
+  user-select: none;
+}

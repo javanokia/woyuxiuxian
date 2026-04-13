@@ -1,7 +1,5 @@
 import BigNumber from 'bignumber.js'
 import type { GameState, ItemData } from './types'
-
-export type { ItemData } from './types'
 import { randomItemName, randomNewItemLog } from './names'
 import { stands } from './stands'
 

@@ -1,9 +1,11 @@
 /**
  * 游戏主循环 — requestAnimationFrame 驱动的 tick 和秒循环
+ *
+ * 优化：timerId/then/secThen/autosaveSec 全部收入闭包，
+ * 避免模块级变量被多实例共享，符合 Vue 3 composable 最佳实践。
  */
-import BigNumber from 'bignumber.js'
 import type { GameState } from '@/data/types'
-import { TICK_INTERVAL, SEC_INTERVAL, AUTOSAVE_TICKS, STAND_LIMIT } from '@/data/constants'
+import { TICK_INTERVAL, SEC_INTERVAL, AUTOSAVE_TICKS } from '@/data/constants'
 import { autoSave } from '@/utils/save'
 
 export interface GameLoopCallbacks {
@@ -12,12 +14,12 @@ export interface GameLoopCallbacks {
   onDeath: () => void
 }
 
-let timerId: number | null = null
-let then = 0
-let secThen = 0
-let autosaveSec = 0
-
 export function useGameLoop(gs: GameState, callbacks: GameLoopCallbacks) {
+  let timerId: number | null = null
+  let then = 0
+  let secThen = 0
+  let autosaveSec = 0
+
   function startTimer() {
     then = Date.now()
     secThen = Date.now()

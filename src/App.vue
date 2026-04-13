@@ -1,72 +1,27 @@
 <template>
   <div class="game-bg">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12 col-md-10 col-md-offset-1 text-center game-center">
-          <hr/>
+    <div class="game-container">
+      <!-- 修炼面板 -->
+      <CultivationPanel />
 
-          <!-- 修炼面板 -->
-          <CultivationPanel
-            :gs="gs"
-            :update-tick="updateTick"
-            :add-by-body="addByBody"
-          />
+      <hr class="ink-divider" />
 
-          <!-- 状态表 + 功法 + 副本 + 法宝 -->
-          <div class="row table-row">
-            <br/>
-            <StatusTable
-              :gs="gs"
-              :update-tick="updateTick"
-              :join-group="joinGroup"
-              :exit-group="exitGroup"
-            />
+      <!-- 状态表 -->
+      <StatusTable />
 
-            <SkillTable
-              :gs="gs"
-              :update-tick="updateTick"
-              :body-lv-up="bodyLvUp"
-              :talent-lv-up="talentLvUp"
-              :skill-lv-up="skillLvUp"
-              :get-new-skill="getNewSkill"
-              :skill-remove="skillRemove"
-            />
+      <!-- 功法 -->
+      <SkillTable />
 
-            <br/>
+      <!-- 副本 -->
+      <DungeonPanel />
 
-            <DungeonPanel
-              :gs="gs"
-              :update-tick="updateTick"
-              :join-group1="joinGroup1"
-              :join-group2="joinGroup2"
-            />
+      <!-- 法宝 -->
+      <ItemTable />
 
-            <br/>
+      <hr class="ink-divider" />
 
-            <ItemTable
-              :gs="gs"
-              :update-tick="updateTick"
-              :get-new-item="getNewItem"
-              :use-item="useItem"
-              :remove-items="removeItems"
-            />
-
-            <br/>
-          </div>
-
-          <hr/>
-
-          <!-- 存档面板 -->
-          <SavePanel
-            :gs="gs"
-            :show-data="showData"
-            :load-data="loadData"
-            :clear-data="clearData"
-          />
-
-          <hr/>
-        </div>
-      </div>
+      <!-- 存档面板 -->
+      <SavePanel />
     </div>
   </div>
 </template>
@@ -81,29 +36,7 @@ import DungeonPanel from '@/components/DungeonPanel.vue'
 import ItemTable from '@/components/ItemTable.vue'
 import SavePanel from '@/components/SavePanel.vue'
 
-const {
-  gs,
-  updateTick,
-  startTimer,
-  stopTimer,
-  addByBody,
-  talentLvUp,
-  bodyLvUp,
-  skillLvUp,
-  getNewSkill,
-  skillRemove,
-  getNewItem,
-  useItem,
-  removeItems,
-  joinGroup,
-  exitGroup,
-  joinGroup1,
-  joinGroup2,
-  showData,
-  loadData,
-  clearData,
-  tryAutoLoad,
-} = useGameState()
+const { startTimer, stopTimer, tryAutoLoad } = useGameState()
 
 onMounted(() => {
   tryAutoLoad()

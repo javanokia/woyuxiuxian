@@ -1,8 +1,6 @@
 import BigNumber from 'bignumber.js'
 import type { GameState, SkillData } from './types'
 
-export type { SkillData } from './types'
-
 const skills: Record<string, SkillData> = {
   // 正统功法 a0
   a0_0: { id: 'a0_0', top: false, degree: '入门', info: '每秒增加10正统修为', need: new BigNumber(500), run: (s) => { s.pointPerSec = s.pointPerSec.plus(1); s.standPerSec = s.standPerSec.plus(1) }, num: new BigNumber(1), getPrev: () => null, getNext: () => skills.a0_1 },

@@ -1,82 +1,671 @@
-/* === 游戏主布局 === */
+/* ========================================
+   我欲修仙 · 水墨仙风 主题
+   Ink-wash Immortal Style
+   ======================================== */
+
+/* --- CSS Variables --- */
+:root {
+  --ink-bg:        #0a0c10;
+  --ink-surface:   #12151c;
+  --ink-card:      #181c26;
+  --ink-card-alt:  #1e2330;
+  --ink-border:    rgba(180, 160, 120, 0.12);
+  --ink-border-hi: rgba(212, 175, 85, 0.3);
+
+  --gold:          #d4af55;
+  --gold-dim:      #a8872e;
+  --gold-bright:   #f0d060;
+  --jade:          #6abf8a;
+  --jade-dim:      #3d8b5e;
+  --crimson:       #c94040;
+  --crimson-dim:   #8b2e2e;
+  --spirit-blue:   #5b8dd9;
+  --spirit-dim:    #3a5f8f;
+  --purple-mist:   #9b6fc0;
+  --mist:          rgba(180, 200, 220, 0.55);
+
+  --text-primary:  #d8d0c0;
+  --text-secondary:#8a8474;
+  --text-dim:      #5a5648;
+  --text-gold:     #e8d5a0;
+
+  --font-display:  'Ma Shan Zheng', cursive;
+  --font-body:     'Noto Serif SC', serif;
+
+  --radius:        6px;
+  --radius-lg:     10px;
+  --shadow:        0 2px 12px rgba(0,0,0,0.5);
+  --shadow-gold:   0 0 20px rgba(212,175,85,0.15);
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--ink-bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* --- Scrollbar --- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--ink-surface); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+/* --- Layout --- */
 .game-bg {
-  background: #333333;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(90,60,30,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(60,40,90,0.08) 0%, transparent 60%),
+    var(--ink-bg);
+  padding: 1rem 0;
 }
 
-.game-center {
-  background: #efefef;
+.game-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-.table-row {
-  background: #888888;
+/* --- Divider (水墨分隔线) --- */
+.ink-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ink-border-hi), transparent);
+  margin: 1.5rem 0;
 }
 
-.game-table {
-  width: 95%;
-  margin: auto;
-  background: #ffffff;
+/* --- Section Card --- */
+.ink-card {
+  background: var(--ink-card);
+  border: 1px solid var(--ink-border);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
 }
 
-/* === 表头/分区行 === */
-.tr-header {
-  color: #e6ffff;
-  font-size: 120%;
-  font-weight: bold;
-  background: #000066;
+.ink-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  opacity: 0.5;
 }
 
-.tr-group {
-  background: #e6e6ff;
+/* card animation */
+.ink-card {
+  animation: fadeIn 0.4s ease both;
+}
+.ink-card:nth-child(2) { animation-delay: 0.05s; }
+.ink-card:nth-child(3) { animation-delay: 0.1s; }
+.ink-card:nth-child(4) { animation-delay: 0.15s; }
+.ink-card:nth-child(5) { animation-delay: 0.2s; }
+.ink-card:nth-child(6) { animation-delay: 0.25s; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.tr-body {
-  background: #e6e6ff;
+/* --- Section Header --- */
+.ink-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--ink-border);
 }
 
-.tr-talent {
-  background: #e6ffd6;
+.ink-header-icon {
+  font-size: 1.3rem;
+  opacity: 0.8;
 }
 
-.tr-skill {
-  background: #ffffd6;
+.ink-header-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--text-gold);
+  letter-spacing: 0.1em;
 }
 
-.tr-item {
-  background: #f2d6ff;
+/* --- Data Grid --- */
+.ink-grid {
+  display: grid;
+  gap: 0.8rem;
 }
 
-/* === 修炼面板 === */
-.announcement {
-  text-align: left;
-  margin: 5px;
+.ink-grid-2 {
+  grid-template-columns: 1fr 1fr;
 }
 
-.announce-label {
-  color: #FF0000;
-  font-weight: bold;
+.ink-grid-3 {
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
-.btn-cultivate {
-  width: 60%;
-  font-size: 200%;
+.ink-grid-4 {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
-/* === 存档面板 === */
-.log-area {
-  background: #ffffff;
-  height: 300px;
-  overflow: scroll;
+.ink-grid-2-2 {
+  grid-template-columns: 2fr 2fr;
 }
 
-.save-input {
-  width: 70%;
+@media (max-width: 600px) {
+  .ink-grid-2, .ink-grid-3, .ink-grid-4, .ink-grid-2-2 {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* === 通用 === */
-.text-muted {
-  color: gray;
+/* --- Data Cell --- */
+.ink-cell {
+  background: var(--ink-card-alt);
+  border: 1px solid var(--ink-border);
+  border-radius: var(--radius);
+  padding: 1rem 0.8rem;
+  text-align: center;
 }
 
-marquee {
+.ink-cell-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.08em;
+}
+
+.ink-cell-value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.ink-cell-sub {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 0.15rem;
+}
+
+.ink-cell-value.gold {
+  color: var(--gold);
+}
+
+.ink-cell-value.jade {
+  color: var(--jade);
+}
+
+.ink-cell-value.crimson {
+  color: var(--crimson);
+}
+
+.ink-cell-value.spirit {
+  color: var(--spirit-blue);
+}
+
+/* --- Buttons --- */
+.ink-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid var(--ink-border-hi);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(212,175,85,0.12) 0%, rgba(212,175,85,0.04) 100%);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
   user-select: none;
+}
+
+.ink-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(212,175,85,0.25) 0%, rgba(212,175,85,0.08) 100%);
+  border-color: var(--gold);
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-1px);
+}
+
+.ink-btn:active:not(:disabled) {
+  transform: translateY(0);
+  background: linear-gradient(180deg, rgba(212,175,85,0.3) 0%, rgba(212,175,85,0.1) 100%);
+}
+
+.ink-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+}
+
+.ink-btn--primary {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  padding: 0.8rem 3rem;
+  border-color: var(--gold);
+  background: linear-gradient(180deg, rgba(212,175,85,0.2) 0%, rgba(160,120,40,0.1) 100%);
+  letter-spacing: 0.2em;
+  box-shadow: var(--shadow-gold);
+}
+
+.ink-btn--primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(212,175,85,0.4) 0%, rgba(160,120,40,0.15) 100%);
+  box-shadow: 0 0 30px rgba(212,175,85,0.3);
+}
+
+.ink-btn--danger {
+  border-color: rgba(180,60,60,0.4);
+  background: linear-gradient(180deg, rgba(180,60,60,0.12) 0%, rgba(180,60,60,0.04) 100%);
+  color: var(--crimson);
+}
+
+.ink-btn--danger:hover:not(:disabled) {
+  border-color: var(--crimson);
+  background: linear-gradient(180deg, rgba(180,60,60,0.25) 0%, rgba(180,60,60,0.08) 100%);
+  box-shadow: 0 0 20px rgba(180,60,60,0.15);
+}
+
+.ink-btn--jade {
+  border-color: rgba(100,180,130,0.3);
+  background: linear-gradient(180deg, rgba(100,180,130,0.1) 0%, rgba(100,180,130,0.03) 100%);
+  color: var(--jade);
+}
+
+.ink-btn--jade:hover:not(:disabled) {
+  border-color: var(--jade);
+  background: linear-gradient(180deg, rgba(100,180,130,0.2) 0%, rgba(100,180,130,0.06) 100%);
+}
+
+.ink-btn--spirit {
+  border-color: rgba(90,140,220,0.3);
+  background: linear-gradient(180deg, rgba(90,140,220,0.1) 0%, rgba(90,140,220,0.03) 100%);
+  color: var(--spirit-blue);
+}
+
+.ink-btn--spirit:hover:not(:disabled) {
+  border-color: var(--spirit-blue);
+  background: linear-gradient(180deg, rgba(90,140,220,0.2) 0%, rgba(90,140,220,0.06) 100%);
+}
+
+.ink-btn--purple {
+  border-color: rgba(155,111,192,0.3);
+  background: linear-gradient(180deg, rgba(155,111,192,0.1) 0%, rgba(155,111,192,0.03) 100%);
+  color: var(--purple-mist);
+}
+
+.ink-btn--purple:hover:not(:disabled) {
+  border-color: var(--purple-mist);
+  background: linear-gradient(180deg, rgba(155,111,192,0.2) 0%, rgba(155,111,192,0.06) 100%);
+}
+
+.ink-btn--sm {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.8rem;
+}
+
+/* --- Progress Bar --- */
+.ink-progress {
+  width: 100%;
+  height: 8px;
+  background: var(--ink-card-alt);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--ink-border);
+}
+
+.ink-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold), var(--gold-bright));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.ink-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+}
+
+/* --- Cultivation Panel --- */
+.cultivation-hero {
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+.cultivation-point {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  color: var(--gold-bright);
+  text-shadow: 0 0 30px rgba(212,175,85,0.3);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.cultivation-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.15em;
+}
+
+.cultivation-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 1rem;
+  padding: 0 0.5rem;
+}
+
+.cultivation-world {
+  text-align: left;
+}
+
+.cultivation-world-level {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--gold-bright);
+  text-shadow: 0 0 15px rgba(212,175,85,0.2);
+  line-height: 1.2;
+}
+
+.cultivation-world-name {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--text-gold);
+}
+
+.cultivation-realm {
+  text-align: right;
+}
+
+.cultivation-realm-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--jade);
+}
+
+.cultivation-realm-progress {
+  margin-top: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cultivation-persec {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 0.3rem;
+}
+
+.cultivation-persec .positive {
+  color: var(--jade);
+}
+
+.cultivation-persec .negative {
+  color: var(--crimson);
+}
+
+/* --- Announcement (auto-dismiss) --- */
+.ink-scroll {
+  overflow: hidden;
+  min-height: 2rem;
+  position: relative;
+  margin-bottom: 0.5rem;
+  transition: opacity 0.5s ease, max-height 0.5s ease;
+}
+
+.ink-scroll.hidden {
+  opacity: 0;
+  max-height: 0;
+  margin-bottom: 0;
+  min-height: 0;
+}
+
+.ink-scroll-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  animation: ink-scroll-pulse 3s ease-in-out infinite;
+}
+
+@keyframes ink-scroll-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.ink-scroll-text {
+  font-size: 0.85rem;
+  color: var(--crimson);
+  font-weight: 600;
+}
+
+/* --- Row Item (功法/法宝列表) --- */
+.ink-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 0.8rem;
+  background: var(--ink-card-alt);
+  border: 1px solid var(--ink-border);
+  border-radius: var(--radius);
+  margin-bottom: 0.5rem;
+  transition: border-color 0.2s ease;
+}
+
+.ink-row:hover {
+  border-color: var(--ink-border-hi);
+}
+
+.ink-row-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-gold);
+  min-width: 120px;
+}
+
+.ink-row-name small {
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-left: 0.3rem;
+}
+
+.ink-row-desc {
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.ink-row-need {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  min-width: 80px;
+  text-align: right;
+}
+
+.ink-row-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+/* --- Section-specific colors --- */
+.ink-card--body .ink-header-title { color: var(--spirit-blue); }
+.ink-card--body::before { background: linear-gradient(90deg, transparent, var(--spirit-dim), transparent); }
+
+.ink-card--talent .ink-header-title { color: var(--jade); }
+.ink-card--talent::before { background: linear-gradient(90deg, transparent, var(--jade-dim), transparent); }
+
+.ink-card--skill .ink-header-title { color: var(--gold); }
+.ink-card--skill::before { background: linear-gradient(90deg, transparent, var(--gold-dim), transparent); }
+
+.ink-card--dungeon .ink-header-title { color: var(--purple-mist); }
+.ink-card--dungeon::before { background: linear-gradient(90deg, transparent, rgba(155,111,192,0.4), transparent); }
+
+.ink-card--item .ink-header-title { color: var(--jade); }
+.ink-card--item::before { background: linear-gradient(90deg, transparent, var(--jade-dim), transparent); }
+
+/* --- Save Panel --- */
+.ink-log {
+  background: var(--ink-surface);
+  border: 1px solid var(--ink-border);
+  border-radius: var(--radius);
+  height: 260px;
+  overflow-y: auto;
+  padding: 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+}
+
+.ink-log p {
+  padding: 0.15rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.ink-save-bar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.ink-input {
+  flex: 1;
+  background: var(--ink-surface);
+  border: 1px solid var(--ink-border);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.8rem;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.ink-input:focus {
+  border-color: var(--gold-dim);
+}
+
+.ink-input::placeholder {
+  color: var(--text-dim);
+}
+
+/* --- Section subtitle --- */
+.ink-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 0.8rem;
+  line-height: 1.5;
+}
+
+.ink-subtitle .highlight {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* --- Tag badge --- */
+.ink-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.ink-badge--passive {
+  background: rgba(90,140,220,0.15);
+  color: var(--spirit-blue);
+  border: 1px solid rgba(90,140,220,0.2);
+}
+
+.ink-badge--active {
+  background: rgba(212,175,85,0.15);
+  color: var(--gold);
+  border: 1px solid rgba(212,175,85,0.2);
+}
+
+/* --- Wait timer text --- */
+.ink-wait {
+  color: var(--crimson);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  html { font-size: 13px; }
+  .cultivation-point { font-size: 2.2rem; }
+  .ink-btn--primary { font-size: 1.6rem; padding: 0.6rem 2rem; }
+  .ink-row { flex-wrap: wrap; }
+  .ink-row-name { min-width: unset; }
+  .ink-row-need { min-width: unset; text-align: left; }
+}
+
+/* --- Extracted utility classes (replaces inline styles) --- */
+.ink-card--nested {
+  margin-bottom: 0.6rem;
+}
+
+.ink-section-gap {
+  margin-top: 0.8rem;
+}
+
+.ink-text-crimson {
+  color: var(--crimson);
+}
+
+.ink-text-spirit {
+  color: var(--spirit-blue);
+}
+
+.ink-gold-text {
+  color: var(--gold);
+}
+
+.ink-dim-text {
+  color: var(--text-dim);
+}
+
+.ink-unit {
+  color: var(--text-dim);
+  font-size: 0.8em;
+}
+
+.cultivation-btn-wrap {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.ink-progress--realm {
+  width: 140px;
+}
+
+.cultivation-progress-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
 }

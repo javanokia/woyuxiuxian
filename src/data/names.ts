@@ -43,10 +43,6 @@ const groupNameArr = [
   '宗', '大寨', '峰', '道', '院', '殿', '观',
 ]
 
-const sengokuName = [
-  '石', '晶', '陨', '珠',
-]
-
 function randomSkillName(): string {
   const a1 = attr1[Math.floor(Math.random() * attr1.length)]
   const a2 = attr2[Math.floor(Math.random() * attr2.length)]

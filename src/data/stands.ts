@@ -1,8 +1,5 @@
 import BigNumber from 'bignumber.js'
-import type { StandData, GameState, GroupData, DungeonData } from './types'
-
-// 类型从此文件 re-export，保持向后兼容
-export type { StandData, GameState, GroupData, DungeonData } from './types'
+import type { StandData } from './types'
 
 const _stands: Record<string, StandData> = {
   _0: {

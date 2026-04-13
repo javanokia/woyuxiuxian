@@ -5,8 +5,6 @@ import { skills } from '@/data/skills'
 import { items } from '@/data/items'
 import { stands } from '@/data/stands'
 import type { GameState } from '@/data/types'
-import type { SkillData } from '@/data/types'
-import type { ItemData } from '@/data/types'
 import { SAVE_KEY } from '@/data/constants'
 
 export interface SaveData {

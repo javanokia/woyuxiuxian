@@ -1,13 +1,15 @@
 /**
- * 游戏状态入口 — 初始化状态 + 组合所有 composable
+ * 游戏状态入口 — 单例化 composable
  *
  * 核心策略：
  * - 游戏状态存储在普通 JS 对象 gs 中（不经过 Vue 响应式代理）
  * - 用一个 ref 计数器 updateTick 作为更新信号，每次修改状态后 +1
- * - 组件模板通过 gs.xxx 直接访问原始对象的属性
- * - 模板中引用 updateTick 确保依赖追踪
+ * - 组件通过 display() 函数创建响应式 computed，自动追踪 tick 信号
+ *
+ * 优化：使用 lazy singleton 模式，确保整个应用只创建一份游戏状态，
+ * 避免多组件调用 useGameState() 时产生意外。
  */
-import { ref } from 'vue'
+import { ref, readonly, type Ref, type ComputedRef } from 'vue'
 import BigNumber from 'bignumber.js'
 import { level, body, talent } from '@/data/levels'
 import { stands } from '@/data/stands'
@@ -18,6 +20,7 @@ import { useGameLoop } from './useGameLoop'
 import { usePlayerActions } from './usePlayerActions'
 import { useWorldActions } from './useWorldActions'
 import { useSaveActions } from './useSaveActions'
+import { useDisplayState, type DisplayRef } from './useDisplayState'
 
 function bn(v: number | string): BigNumber {
   return new BigNumber(v)
@@ -69,6 +72,10 @@ function tick() {
   updateTick.value++
 }
 
+// ─── 响应式显示层 ───
+
+const { display } = useDisplayState(updateTick)
+
 // ─── 组合各模块 ───
 
 const player = usePlayerActions(gs, tick)
@@ -91,33 +98,67 @@ const { startTimer, stopTimer } = useGameLoop(gs, {
   },
 })
 
-// ─── 导出统一接口 ───
+// ─── 单例接口（懒初始化，只创建一次） ───
 
-export function useGameState() {
-  return {
-    gs,
-    updateTick,
-    startTimer,
-    stopTimer,
-    // 玩家操作
-    addByBody: player.addByBody,
-    talentLvUp: player.talentLvUp,
-    bodyLvUp: player.bodyLvUp,
-    skillLvUp: player.skillLvUp,
-    getNewSkill: player.getNewSkill,
-    skillRemove: player.skillRemove,
-    getNewItem: player.getNewItem,
-    useItem: player.useItem,
-    removeItems: player.removeItems,
-    // 世界操作
-    joinGroup: world.joinGroup,
-    exitGroup: world.exitGroup,
-    joinGroup1: world.joinGroup1,
-    joinGroup2: world.joinGroup2,
-    // 存档操作
-    showData: save.showData,
-    loadData: save.loadData,
-    clearData: save.clearData,
-    tryAutoLoad: save.tryAutoLoad,
+interface GameStateApi {
+  gs: GameState
+  updateTick: Readonly<Ref<number>>
+  display: <T>(getter: () => T) => DisplayRef<T>
+  startTimer: () => void
+  stopTimer: () => void
+  // 玩家操作
+  addByBody: () => void
+  talentLvUp: () => void
+  bodyLvUp: () => void
+  skillLvUp: (i: number) => void
+  getNewSkill: () => void
+  skillRemove: (id: number) => void
+  getNewItem: () => void
+  useItem: (id: number) => void
+  removeItems: () => void
+  // 世界操作
+  joinGroup: () => void
+  exitGroup: () => void
+  joinGroup1: () => void
+  joinGroup2: () => void
+  // 存档操作
+  showData: () => void
+  loadData: () => void
+  clearData: () => void
+  tryAutoLoad: () => void
+}
+
+let _instance: GameStateApi | null = null
+
+export function useGameState(): GameStateApi {
+  if (!_instance) {
+    _instance = {
+      gs,
+      updateTick: readonly(updateTick),
+      display,
+      startTimer,
+      stopTimer,
+      // 玩家操作
+      addByBody: player.addByBody,
+      talentLvUp: player.talentLvUp,
+      bodyLvUp: player.bodyLvUp,
+      skillLvUp: player.skillLvUp,
+      getNewSkill: player.getNewSkill,
+      skillRemove: player.skillRemove,
+      getNewItem: player.getNewItem,
+      useItem: player.useItem,
+      removeItems: player.removeItems,
+      // 世界操作
+      joinGroup: world.joinGroup,
+      exitGroup: world.exitGroup,
+      joinGroup1: world.joinGroup1,
+      joinGroup2: world.joinGroup2,
+      // 存档操作
+      showData: save.showData,
+      loadData: save.loadData,
+      clearData: save.clearData,
+      tryAutoLoad: save.tryAutoLoad,
+    }
   }
+  return _instance
 }

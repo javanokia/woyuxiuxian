@@ -44,18 +44,22 @@ export function useWorldActions(gs: GameState, tick: () => void) {
     if (!gs.renown.isLessThan(GROUP_RENOWN_COST)) {
       gs.renown = gs.renown.minus(GROUP_RENOWN_COST)
       const obj = getRandomGroup()
-      gs.group = { exist: true, object: obj, name: randomGroupName() }
+      const gName = randomGroupName()
+      gs.group = { exist: true, object: obj, name: gName }
       obj.start(gs)
+      gs.logTxt.splice(0, 0, '拜入「' + gName + '」门下，修行之路从此有师承！')
       tick()
     }
   }
 
   /** 退出门派 */
   function exitGroup() {
+    const oldName = gs.group.name
     if (gs.group.object) gs.group.object.end(gs)
     gs.group = { exist: false, object: null, name: '散修' }
     gs.groupInterval = gs.groupInterval.plus(10)
     gs.groupWait = gs.groupInterval.toNumber()
+    gs.logTxt.splice(0, 0, '金盆洗手，退出「' + oldName + '」，重归散修之身！')
     tick()
   }
 
@@ -66,6 +70,7 @@ export function useWorldActions(gs: GameState, tick: () => void) {
       const obj = getRandomGroup1()
       gs.group1 = { exist: false, object: obj, name: '远古之神' }
       obj.start(gs)
+      gs.logTxt.splice(0, 0, '献祭八成金币于古神，命运博弈由此开启！')
       tick()
     }
   }
@@ -77,6 +82,7 @@ export function useWorldActions(gs: GameState, tick: () => void) {
       const obj = getRandomGroup2()
       gs.group2 = { exist: false, object: obj, name: '正义联盟' }
       obj.start(gs)
+      gs.logTxt.splice(0, 0, '贡献七成寿元于神明，换取神恩庇佑！')
       tick()
     }
   }

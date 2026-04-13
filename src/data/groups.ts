@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 import type { GameState, GroupData, DungeonData } from './types'
-import { randomSkillName, randomItemName, randomGroupName } from './names'
+import { randomSkillName, randomItemName } from './names'
 import { getRandomSkill } from './skills'
 import { getRandomItem } from './items'
 

@@ -1,84 +1,111 @@
 <template>
-  <table class="table table-bordered table-condensed game-table">
-    <tbody>
-      <tr class="tr-header"><td>名称</td><td>能力</td><td>升级需求</td><td></td></tr>
-      <tr class="tr-body"><td colspan="4" class="text-left">身体</td></tr>
-      <tr>
-        <td><h4>{{ gs.body.name }}</h4></td>
-        <td>每次修炼增加 {{ bodyNumText }} 修为</td>
-        <td><template v-if="!gs.body.top">{{ bodyNeedText }} 修为</template></td>
-        <td><button class="btn btn-default" @click="bodyLvUp" :disabled="cantBodyLvUp">升级</button></td>
-      </tr>
-      <tr class="tr-talent"><td colspan="4" class="text-left">灵根</td></tr>
-      <tr>
-        <td><h4>{{ gs.talent.name }}</h4></td>
-        <td>可修炼 {{ talentNumText }} 项功法</td>
-        <td><template v-if="!gs.talent.top">{{ talentNeedText }} 修为</template></td>
-        <td><button class="btn btn-default" @click="talentLvUp" :disabled="cantTalentLvUp">升级</button></td>
-      </tr>
-      <tr class="tr-skill">
-        <td class="text-left">功法：{{ gs.skills.length }}项</td>
-        <td colspan="2" class="text-center">
+  <div class="ink-card ink-card--skill">
+    <div class="ink-header">
+      <span class="ink-header-icon">☷</span>
+      <span class="ink-header-title">功法修炼</span>
+    </div>
+
+    <!-- 身体 -->
+    <div class="ink-card ink-card--body ink-card--nested">
+      <div class="ink-header">
+        <span class="ink-header-icon">◆</span>
+        <span class="ink-header-title">身体</span>
+      </div>
+      <div class="ink-row">
+        <div class="ink-row-name">{{ bodyName }}</div>
+        <div class="ink-row-desc">每次修炼增加 {{ bodyNumText }} 修为</div>
+        <div class="ink-row-need">
+          <template v-if="!bodyTop">{{ bodyNeedText }} 修为</template>
+          <template v-else><span class="ink-gold-text">已圆满</span></template>
+        </div>
+        <div class="ink-row-actions">
+          <button class="ink-btn ink-btn--spirit ink-btn--sm" @click="bodyLvUp" :disabled="cantBodyLvUp">升级</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 灵根 -->
+    <div class="ink-card ink-card--talent ink-card--nested">
+      <div class="ink-header">
+        <span class="ink-header-icon">◈</span>
+        <span class="ink-header-title">灵根</span>
+      </div>
+      <div class="ink-row">
+        <div class="ink-row-name">{{ talentName }}</div>
+        <div class="ink-row-desc">可修炼 {{ talentNumText }} 项功法</div>
+        <div class="ink-row-need">
+          <template v-if="!talentTop">{{ talentNeedText }} 修为</template>
+          <template v-else><span class="ink-gold-text">已圆满</span></template>
+        </div>
+        <div class="ink-row-actions">
+          <button class="ink-btn ink-btn--jade ink-btn--sm" @click="talentLvUp" :disabled="cantTalentLvUp">升级</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 功法列表 -->
+    <div class="ink-section-gap">
+      <div class="ink-row">
+        <div class="ink-row-name">功法 <small>{{ skillCount }}项</small></div>
+        <div class="ink-row-desc">
           <template v-if="canGetNewSkill">
-            门槛需达 {{ skillThresholdText }} 修为，消耗修为至{{ gs.skills.length + 2 }}分之一
+            门槛需达 <span class="highlight">{{ skillThresholdText }}</span> 修为，消耗修为至{{ skillCount + 2 }}分之一
           </template>
-        </td>
-        <td>
+          <template v-else>
+            <span class="ink-dim-text">灵根不足以修炼更多功法</span>
+          </template>
+        </div>
+        <div class="ink-row-actions">
           <template v-if="canGetNewSkill">
-            <button class="btn btn-default" @click="getNewSkill" :disabled="cantGetNewSkill">学习新功法</button>
+            <button class="ink-btn ink-btn--sm" @click="getNewSkill" :disabled="cantGetNewSkill">学习新功法</button>
           </template>
-        </td>
-      </tr>
-      <tr v-for="(skill, id) in gs.skills" :key="skill.name + '-' + id">
-        <td><h5>{{ skill.name }} - {{ skill.object.degree }}</h5></td>
-        <td>{{ skill.object.info }}</td>
-        <td><template v-if="!skill.object.top">{{ skillNeedText(id) }} 修为</template></td>
-        <td>
-          <button class="btn btn-default" @click="skillLvUp(id)" :disabled="cantSkillLvUp(id)">升级</button>
-          <button class="btn btn-default" @click="skillRemove(id)" :disabled="cantSkillRemove">散功({{ removeCostText }}金)</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </div>
+      </div>
+
+      <div v-for="(skill, id) in gs.skills" :key="id" class="ink-row">
+        <div class="ink-row-name">{{ skill.name }} <small>{{ skill.object.degree }}</small></div>
+        <div class="ink-row-desc">{{ skill.object.info }}</div>
+        <div class="ink-row-need">
+          <template v-if="!skill.object.top">{{ skillNeedTexts[id] }} 修为</template>
+          <template v-else><span class="ink-gold-text">已圆满</span></template>
+        </div>
+        <div class="ink-row-actions">
+          <button class="ink-btn ink-btn--sm" @click="skillLvUp(id)" :disabled="cantSkillLvUps[id]">升级</button>
+          <button class="ink-btn ink-btn--danger ink-btn--sm" @click="skillRemove(id)" :disabled="cantSkillRemove">散功</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { numFilterTxt } from '@/utils/numFilter'
-import type { GameState } from '@/data/types'
+import { useGameState } from '@/composables/useGameState'
 
-const props = defineProps<{
-  gs: GameState
-  updateTick: number
-  bodyLvUp: () => void
-  talentLvUp: () => void
-  skillLvUp: (id: number) => void
-  getNewSkill: () => void
-  skillRemove: (id: number) => void
-}>()
+const { gs, display, bodyLvUp, talentLvUp, skillLvUp, getNewSkill, skillRemove } = useGameState()
 
-const bodyNumText = computed(() => { props.updateTick; return numFilterTxt(props.gs.body.num.toString()) })
-const bodyNeedText = computed(() => { props.updateTick; return numFilterTxt(props.gs.body.need.toString()) })
-const talentNumText = computed(() => { props.updateTick; return props.gs.talent.num.toString() })
-const talentNeedText = computed(() => { props.updateTick; return numFilterTxt(props.gs.talent.need.toString()) })
-const removeCostText = computed(() => { props.updateTick; return props.gs.removeCost.toString() })
+// 身体
+const bodyName = display(() => gs.body.name)
+const bodyNumText = display(() => numFilterTxt(gs.body.num.toString()))
+const bodyNeedText = display(() => numFilterTxt(gs.body.need.toString()))
+const bodyTop = display(() => gs.body.top)
+const cantBodyLvUp = display(() => gs.point.isLessThan(gs.body.need) || gs.body.top)
 
-const skillThresholdText = computed(() => { props.updateTick; return numFilterTxt(props.gs.level.max.div(2).toString()) })
-const canGetNewSkill = computed(() => { props.updateTick; return props.gs.talent.num.isGreaterThan(props.gs.skills.length) })
-const cantGetNewSkill = computed(() => { props.updateTick; return props.gs.point.isLessThan(props.gs.level.max.div(2)) })
+// 灵根
+const talentName = display(() => gs.talent.name)
+const talentNumText = display(() => gs.talent.num.toString())
+const talentNeedText = display(() => numFilterTxt(gs.talent.need.toString()))
+const talentTop = display(() => gs.talent.top)
+const cantTalentLvUp = display(() => gs.point.isLessThan(gs.talent.need) || gs.talent.top)
 
-const cantBodyLvUp = computed(() => { props.updateTick; return props.gs.point.isLessThan(props.gs.body.need) || props.gs.body.top })
-const cantTalentLvUp = computed(() => { props.updateTick; return props.gs.point.isLessThan(props.gs.talent.need) || props.gs.talent.top })
+// 功法
+const skillCount = display(() => gs.skills.length)
+const skillThresholdText = display(() => numFilterTxt(gs.level.max.div(2).toString()))
+const canGetNewSkill = display(() => gs.talent.num.isGreaterThan(gs.skills.length))
+const cantGetNewSkill = display(() => gs.point.isLessThan(gs.level.max.div(2)))
+const cantSkillRemove = display(() => gs.money.isLessThan(gs.removeCost))
 
-function cantSkillLvUp(id: number): boolean {
-  props.updateTick
-  return props.gs.point.isLessThan(props.gs.skills[id].object.need) || props.gs.skills[id].object.top
-}
-
-function skillNeedText(id: number): string {
-  props.updateTick
-  return numFilterTxt(props.gs.skills[id].object.need.toString())
-}
-
-const cantSkillRemove = computed(() => { props.updateTick; return props.gs.money.isLessThan(props.gs.removeCost) })
+// 功法列表 — 用 display() 返回数组，响应式追踪
+const skillNeedTexts = display(() => gs.skills.map(s => numFilterTxt(s.object.need.toString())))
+const cantSkillLvUps = display(() => gs.skills.map(s => gs.point.isLessThan(s.object.need) || s.object.top))
 </script>

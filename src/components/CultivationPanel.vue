@@ -1,53 +1,75 @@
 <template>
-  <div class="row">
-    <div class="announcement">
-      <marquee direction="up" height="40" scrollamount="1" scrolldelay="1">
-        <p class="text-center"><span class="announce-label">公告：</span>Vue 3 版本重制完成！</p>
-      </marquee>
+  <div class="ink-card">
+    <!-- 公告（自动消失） -->
+    <div class="ink-scroll" :class="{ hidden: announcementHidden }">
+      <div class="ink-scroll-inner">
+        <span class="ink-scroll-text">公告：Vue 3 版本重制完成！</span>
+      </div>
     </div>
 
-    <h1>修为: {{ pointText }}</h1>
-    <div class="col-md-4 text-left">
-      第{{ gs.worldTimes }}重天 <h2>{{ gs.world[0] }}界</h2>
+    <!-- 修为核心 -->
+    <div class="cultivation-hero">
+      <div class="cultivation-label">修 为</div>
+      <div class="cultivation-point">{{ pointText }}</div>
     </div>
-    <div class="col-md-4 text-center">
-      <button class="btn btn-lg btn-default btn-cultivate" @click="addByBody">修炼</button>
+
+    <!-- 修炼按钮 -->
+    <div class="cultivation-btn-wrap">
+      <button class="ink-btn ink-btn--primary" @click="addByBody">修 炼</button>
     </div>
-    <div class="col-md-4 text-right">
-      <h3>{{ gs.level.name }} 境界</h3>
-      <p>
-        <progress :value="progressValue" max="100"></progress>
-        {{ levelMaxText }}
-      </p>
-      <p>每秒
-        <template v-if="!isPointPerSecNegative">增加</template>
-        <template v-else>减少</template>
-        {{ pointPerSecText }} 修为
-      </p>
+
+    <!-- 信息栏 -->
+    <div class="cultivation-info">
+      <div class="cultivation-world">
+        <div class="cultivation-world-level">第{{ worldTimes }}重天</div>
+        <div class="cultivation-world-name">{{ worldName }}界</div>
+      </div>
+      <div class="cultivation-realm">
+        <div class="cultivation-realm-name">{{ levelName }} 境界</div>
+        <div class="cultivation-realm-progress">
+          <div class="ink-progress ink-progress--realm">
+            <div class="ink-progress-fill" :style="{ width: progressValue + '%' }"></div>
+          </div>
+          <span class="cultivation-progress-label">{{ progressLabel }}</span>
+        </div>
+        <div class="cultivation-persec">
+          每秒
+          <template v-if="!isPointPerSecNegative"><span class="positive">增加</span></template>
+          <template v-else><span class="negative">减少</span></template>
+          {{ pointPerSecText }} 修为
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { onMounted, ref } from 'vue'
 import { numFilterTxt } from '@/utils/numFilter'
-import type { GameState } from '@/data/types'
+import { useGameState } from '@/composables/useGameState'
 
-const props = defineProps<{
-  gs: GameState
-  updateTick: number
-  addByBody: () => void
-}>()
+const { gs, display, addByBody } = useGameState()
 
-const pointText = computed(() => { props.updateTick; return numFilterTxt(props.gs.point.dp(0).toString()) })
-const levelMaxText = computed(() => { props.updateTick; return numFilterTxt(props.gs.level.max.toString()) })
-const pointPerSecText = computed(() => { props.updateTick; return numFilterTxt(props.gs.pointPerSec.abs().times(10).dp(0).toString()) })
-const isPointPerSecNegative = computed(() => { props.updateTick; return props.gs.pointPerSec.isLessThan(0) })
+const pointText = display(() => numFilterTxt(gs.point.dp(0).toString()))
+const worldTimes = display(() => gs.worldTimes)
+const worldName = display(() => gs.world[0])
+const levelName = display(() => gs.level.name)
+const pointPerSecText = display(() => numFilterTxt(gs.pointPerSec.abs().times(10).dp(0).toString()))
+const isPointPerSecNegative = display(() => gs.pointPerSec.isLessThan(0))
 
-const progressValue = computed(() => {
-  props.updateTick
-  if (props.gs.level.max.isZero()) return 0
-  const ratio = props.gs.point.div(props.gs.level.max).times(100).toNumber()
+const progressValue = display(() => {
+  if (gs.level.max.isZero()) return 0
+  const ratio = gs.point.div(gs.level.max).times(100).toNumber()
   return Math.min(Math.max(ratio, 0), 100)
+})
+
+const progressLabel = display(() => progressValue.value.toFixed(1) + '%')
+
+// 公告自动消失
+const announcementHidden = ref(false)
+onMounted(() => {
+  setTimeout(() => {
+    announcementHidden.value = true
+  }, 8000)
 })
 </script>
